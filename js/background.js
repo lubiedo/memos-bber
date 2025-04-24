@@ -24,6 +24,7 @@ chrome.runtime.onInstalled.addListener(() => {
       },
     )
 })
+
 chrome.contextMenus.onClicked.addListener(info => {
     let tempCont=''
     switch(info.menuItemId){
@@ -45,3 +46,17 @@ chrome.contextMenus.onClicked.addListener(info => {
       }
     })
 })
+
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.method === "get_text") {
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => { return document.body.innerText },
+      }).then((r) => {
+        sendResponse({method: 'get_text', text: r[0].result})
+      });
+    });
+  }
+});

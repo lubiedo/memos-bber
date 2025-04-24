@@ -127,7 +127,7 @@ input.inputer{border-bottom: 1px solid #ccc;width:75%;}
 }
 
 .common-tools-container .mr-5{margin-right: .5rem;}
-.common-tools-container svg.icon,#blog_info_edit svg.icon{width:24px;height:24px;opacity: 0.6;cursor: pointer;}
+.common-tools-container svg.icon, #memos_open svg.icon, #blog_info_edit svg.icon{width:24px;height:24px;opacity: 0.6;cursor: pointer;}
 #newtodo svg.icon{padding-top: 2px;}
 #tags svg.icon{padding: 2px;width:23px;height:23px;}
 #random svg.icon{padding:2px;width:19px;height:19px;}
@@ -164,6 +164,11 @@ input.inputer{border-bottom: 1px solid #ccc;width:75%;}
 #blog_info_edit{
     position: absolute;
     right: 1rem;
+    top: 0.5rem;
+}
+#memos_open{
+    position: absolute;
+    right: 3rem;
     top: 0.5rem;
 }
 #blog_info{

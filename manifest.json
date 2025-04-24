@@ -5,15 +5,15 @@
    "version": "2024.07.21",
    "action": {
       "default_popup": "popup.html",
-      "default_icon": "assets/logo_24x24.png",
+      "default_icon": "assets/memos_24x24.png",
       "default_title": "__MSG_actionTitle__"
    },
    "description": "__MSG_extDescription__",
    "homepage_url": "https://immmmm.com",
    "icons": {
-      "128": "assets/logo.png",
-      "16": "assets/logo.png",
-      "48": "assets/logo.png"
+      "128": "assets/memos.png",
+      "16": "assets/memos.png",
+      "48": "assets/memos.png"
    },
    "background": {
       "service_worker": "js/background.js"
@@ -22,6 +22,7 @@
       "tabs",
       "storage",
       "activeTab",
+      "scripting",
       "contextMenus"
    ],
    "host_permissions": ["http://*/*", "https://*/*"],

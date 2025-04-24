@@ -12,6 +12,9 @@
   </head>
   <body class="body">
     <div class="title" id="opensite">MEMOS</div>
+    <div id="memos_open">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24px" height="24px"><path d="M19,21H5c-1.1,0-2-0.9-2-2V5c0-1.1,0.9-2,2-2h7v2H5v14h14v-7h2v7C21,20.1,20.1,21,19,21z"/><path d="M21 10L19 10 19 5 14 5 14 3 21 3z"/><path d="M6.7 8.5H22.3V10.5H6.7z" transform="rotate(-45.001 14.5 9.5)"/></svg>
+    </div>
     <div id="blog_info_edit"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="icon" viewBox="0 0 1024 1024">
       <path d="M914 432c-5-26-21-43-41-43h-4c-54 0-99-44-99-99 0-17 9-37 9-38 10-22 2-50-18-65l-103-57h-1c-21-9-49-4-64 12-12 12-50 44-79 44s-68-33-79-45a60 60 0 0 0-64-13l-106 58-2 1a54 54 0 0 0-18 65c0 1 9 21 9 38 0 55-45 99-99 99h-5c-19 0-35 17-40 43 0 2-9 45-9 80s9 79 9 81c5 25 21 42 41 42h4c54 0 99 45 99 99 0 18-9 37-9 38-10 23-2 51 18 65l101 56 1 1c21 9 49 3 65-13 14-15 52-47 80-47 30 0 69 35 81 48a58 58 0 0 0 64 14l104-58 2-1c20-14 28-42 18-65 0-1-9-20-9-38 0-54 45-99 99-99h5c19 0 35-17 40-42 0-2 9-46 9-81s-9-78-9-80m-51 80c0 23-5 52-7 64a158 158 0 0 0-134 215l-89 49c-4-5-17-18-35-31-31-23-61-35-88-35s-57 12-88 34c-17 13-30 26-34 31l-86-48a159 159 0 0 0-134-215c-2-12-7-41-7-64 0-22 5-51 7-64a157 157 0 0 0 134-214l91-50c4 4 17 17 35 29 30 22 59 33 86 33s55-11 85-32c18-13 31-25 35-29l88 49a159 159 0 0 0 134 214c2 13 7 42 7 64"/>
       <path d="M510 366a146 146 0 1 0 1 292 146 146 0 0 0-1-292m87 146a87 87 0 1 1-173-1 87 87 0 0 1 173 1"/>
@@ -37,6 +40,26 @@
           placeholder=""
           required
         />
+        <input
+          id="ollamaBaseUrl"
+          class="inputer"
+          name="ollamaBaseUrl"
+          type="text"
+          value=""
+          maxlength="245"
+          placeholder=""
+          required
+        />
+        <input
+          id="ollamaModel"
+          class="inputer"
+          name="ollamaModel"
+          type="text"
+          value=""
+          maxlength="245"
+          placeholder=""
+          required
+        />
         <span id="saveKey" class="action-btn confirm-btn"></span>
     </div>
 
@@ -53,6 +76,9 @@
 
   <div class="common-tools-wrapper">
     <div class="common-tools-container">
+      <div id="ai-tags" class="mr-5">
+        <svg width="32px" height="32px" viewBox="0 0 24 24" class="icon" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:#f00 !important;} </style></defs><path fill="#666" d="M16,13H8a3,3,0,0,1-3-3V6A3,3,0,0,1,8,3h8a3,3,0,0,1,3,3v4A3,3,0,0,1,16,13ZM8,5A1,1,0,0,0,7,6v4a1,1,0,0,0,1,1h8a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1Z"/><path fill="#666" d="M10,9a1.05,1.05,0,0,1-.71-.29A1,1,0,0,1,10.19,7a.6.6,0,0,1,.19.06.56.56,0,0,1,.17.09l.16.12A1,1,0,0,1,10,9Z"/><path fill="#666" d="M14,9a1,1,0,0,1-.71-1.71,1,1,0,0,1,1.42,1.42,1,1,0,0,1-.16.12.56.56,0,0,1-.17.09.6.6,0,0,1-.19.06Z"/><path fill="#666" d="M12,4a1,1,0,0,1-1-1V2a1,1,0,0,1,2,0V3A1,1,0,0,1,12,4Z"/><path fill="#666" d="M9,22a1,1,0,0,1-1-1V18a1,1,0,0,1,2,0v3A1,1,0,0,1,9,22Z"/><path fill="#666" d="M15,22a1,1,0,0,1-1-1V18a1,1,0,0,1,2,0v3A1,1,0,0,1,15,22Z"/><path fill="#666" d="M15,19H9a1,1,0,0,1-1-1V12a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1v6A1,1,0,0,1,15,19Zm-5-2h4V13H10Z"/><path fill="#666" d="M5,17a1,1,0,0,1-.89-.55,1,1,0,0,1,.44-1.34l4-2a1,1,0,1,1,.9,1.78l-4,2A.93.93,0,0,1,5,17Z"/><path fill="#666" d="M19,17a.93.93,0,0,1-.45-.11l-4-2a1,1,0,1,1,.9-1.78l4,2a1,1,0,0,1,.44,1.34A1,1,0,0,1,19,17Z"/></svg>
+      </div>
       <div id="tags" class="mr-5">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="icon" viewBox="0 0 1024 1024">
           <path fill="#666" d="M171 341h682q43 0 43 43t-43 43H171q-43 0-43-43t43-43Z"/>

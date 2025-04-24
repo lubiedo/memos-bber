@@ -8,6 +8,8 @@ function get_info(callback) {
       apiTokens: '',
       hidetag: '',
       showtag: '',
+      ollamaBaseUrl: '',
+      ollamaModel: '',
       memo_lock: '',
       open_action: '',
       open_content: '',
@@ -27,6 +29,8 @@ function get_info(callback) {
       returnObject.apiTokens = items.apiTokens
       returnObject.hidetag = items.hidetag
       returnObject.showtag = items.showtag
+      returnObject.ollamaBaseUrl = items.ollamaBaseUrl
+      returnObject.ollamaModel = items.ollamaModel
       returnObject.memo_lock = items.memo_lock
       returnObject.open_content = items.open_content
       returnObject.open_action = items.open_action
@@ -59,6 +63,8 @@ get_info(function (info) {
   }
   $('#apiUrl').val(info.apiUrl)
   $('#apiTokens').val(info.apiTokens)
+  $('#ollamaBaseUrl').val(info.ollamaBaseUrl)
+  $('#ollamaModel').val(info.ollamaModel)
   $('#hideInput').val(info.hidetag)
   $('#showInput').val(info.showtag)
   if (info.open_action === 'upload_image') {
@@ -243,6 +249,12 @@ $('#saveKey').click(function () {
     apiUrl += '/';
   }
   var apiTokens = $('#apiTokens').val()
+  var ollamaBaseUrl = $('#ollamaBaseUrl').val()
+  if (ollamaBaseUrl.endsWith('/')) {
+    ollamaBaseUrl = ollamaBaseUrl.substring(0, ollamaBaseUrl.length - 1)
+  }
+  var ollamaModel = $('#ollamaModel').val()
+
   // 设置请求参数
   const settings = {
     async: true,
@@ -263,6 +275,8 @@ $('#saveKey').click(function () {
         {
           apiUrl: apiUrl,
           apiTokens: apiTokens,
+          ollamaBaseUrl: ollamaBaseUrl,
+          ollamaModel: ollamaModel,
           userid: userid
         },
         function () {
@@ -571,6 +585,13 @@ $('#blog_info_edit').click(function () {
   $('#blog_info').slideToggle()
 })
 
+$('#memos_open').click(function () {
+get_info((info) => {
+  if (!info.status) { return; }
+  chrome.tabs.create({url: info.apiUrl});
+});
+})
+
 $('#content_submit_text').click(function () {
   var contentVal = $("textarea[name=text]").val()
   if(contentVal){
@@ -679,4 +700,85 @@ function sendText() {
       })
     }
   })
-}  
+}
+
+const tag_lang = "english"
+const tag_prompt = `
+You are a bot in a read-it-later app and your responsibility is to help with automatic tagging.
+Please analyze the text between the sentences "<CONTENT_START_HERE>" and "<CONTENT_END_HERE>" and suggest relevant tags that describe its key themes, topics, and main ideas. The rules are:
+- Aim for a variety of tags, including broad categories, specific keywords, and potential sub-genres.
+- The tags language must be in ${tag_lang}.
+- If it's a famous website you may also include a tag for the website. If the tag is not generic enough, don't include it.
+- The content can include text for cookie consent and privacy policy, ignore those while tagging.
+- Aim for 3-5 tags.
+- If there are no good tags, leave the array empty.
+
+<CONTENT_START_HERE>
+{{CONTENT}}
+<CONTENT_END_HERE>
+You must respond in JSON with the key "tags" and the value is an array of string tags.
+`
+
+let tag_working = false
+
+function ai_tag(endpoint, model) {
+  const chat_url = `${endpoint}/api/generate`
+  let data = {
+    model: model,
+    prompt: '',
+    stream: false,
+  }
+
+  const toggle_status = (b) => {
+    $.each($("#ai-tags > svg > path"), (i,e) => {$(e).toggleClass('cls-1', b)})
+    tag_working = b
+  }
+
+  chrome.runtime.sendMessage({method: "get_text"}, async (response) => {
+    if(response.method=="get_text"){
+      try {
+        text = response.text;
+        if (text === undefined) {
+          throw new Error("ai_tag ERROR: Couldn't retrieve tab's content.")
+        }
+        data.prompt = tag_prompt.replace('{{CONTENT}}', text)
+
+        toggle_status(true)
+        const result = await fetch(chat_url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!result.ok) {
+          throw new Error(`HTTP ERROR: ${result.status}`)
+        }
+
+        var tags = await result.json();
+        tags = JSON.parse(tags.response)
+        tags = tags.tags.map((i) => `#${i}`.replaceAll(' ', '-')).join(' ')
+
+        const before = $("textarea[name=text]").val();
+        $("textarea[name=text]").val(`${before}\n${tags.toLowerCase()}`);
+        toggle_status(false)
+      }
+      catch(err) {
+        toggle_status(false)
+        console.error(err)
+      }
+    }
+  });
+}
+
+$('#ai-tags').click(function () {
+  if (tag_working)  // avoid more than one click while analyzing tags
+    return;
+
+  get_info(function (info) {
+    if (info.ollamaBaseUrl && info.ollamaModel) {
+      ai_tag(info.ollamaBaseUrl, info.ollamaModel)
+    }
+  })
+})
